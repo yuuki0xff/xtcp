@@ -12,6 +12,10 @@ var (
 	DefaultRecvBufInitSize = 1 << 10 // 1k
 	// DefaultRecvBufMaxSize is the default max size of recv buf.
 	DefaultRecvBufMaxSize = 4 << 10 // 4k
+	// DefaultSendBufInitSize is the default init size of send buf.
+	DefaultSendBufInitSize = 1 << 10 // 1k
+	// DefaultSendBufMaxSize is the default max size of send buf.
+	DefaultSendBufMaxSize = 2 << 10 // 4k
 )
 
 // StopMode define the stop mode of server and conn.
@@ -95,6 +99,8 @@ type Options struct {
 	SendListLen     int // default is DefaultSendListLen if you don't set.
 	RecvBufInitSize int // default is DefaultRecvBufInitSize if you don't set.
 	RecvBufMaxSize  int // default is DefaultRecvBufMaxSize if you don't set.
+	SendBufInitSize int // default is DefaultSendBufInitSize if you don't set.
+	SendBufMaxSize  int // default is DefaultSendBufMaxSize if you don't set.
 }
 
 // NewOpts create a new options and set some default value.
@@ -110,6 +116,8 @@ func NewOpts(h Handler, p Protocol) *Options {
 		SendListLen:     DefaultSendListLen,
 		RecvBufInitSize: DefaultRecvBufInitSize,
 		RecvBufMaxSize:  DefaultRecvBufMaxSize,
+		SendBufInitSize: DefaultSendBufInitSize,
+		SendBufMaxSize:  DefaultSendBufMaxSize,
 	}
 }
 
@@ -137,5 +145,23 @@ func (opts *Options) SetRecvBufMaxSize(s int) *Options {
 		panic("xtcp.Options.SetRecvBufMaxSize: negative size")
 	}
 	opts.RecvBufMaxSize = s
+	return opts
+}
+
+// SetSendBufInitSize set init size of the recv buf, 0 mean DefaultSendBufInitSize.
+func (opts *Options) SetSendBufInitSize(s int) *Options {
+	if s < 0 {
+		panic("xtcp.Options.SetSendBufInitSize: negative size")
+	}
+	opts.SendBufInitSize = s
+	return opts
+}
+
+// SetSendBufMaxSize set max size of the recv buf, 0 mean DefaultSendBufMaxSize.
+func (opts *Options) SetSendBufMaxSize(s int) *Options {
+	if s < 0 {
+		panic("xtcp.Options.SetSendBufMaxSize: negative size")
+	}
+	opts.SendBufMaxSize = s
 	return opts
 }

@@ -188,7 +188,11 @@ func (c *Conn) send() {
 
 	c.wg.Add(1)
 
-	sendBuf := NewBuffer(256, 2048)
+	sendBuf := NewBuffer(c.Opts.SendBufInitSize, c.Opts.SendBufMaxSize)
+	if sendBuf == nil {
+		xlog.Error("Conn Recv error: cann't create send buf")
+		return
+	}
 
 	for {
 		select {
